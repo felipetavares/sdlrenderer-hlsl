@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstdint>
 
 // This has the full definition for SDL_Renderer, which allows us to reference
 // private fields inside it.
@@ -170,7 +171,7 @@ SDL_Renderer* direct3d9_renderer(SDL_Window* window) {
 }
 
 IDirect3DPixelShader9* apply_hlsl_shader(SDL_Renderer* renderer, IDirect3DPixelShader9* shader) {
-    IDirect3DDevice9* device = ((D3D_RenderData*)renderer->driverdata)->device;
+    IDirect3DDevice9* device = reinterpret_cast<D3D_RenderData*>(renderer->driverdata)->device;
     IDirect3DPixelShader9* current_shader;
 
     assert(D3D_OK == IDirect3DDevice9_GetPixelShader(device, &current_shader));
@@ -182,7 +183,18 @@ IDirect3DPixelShader9* apply_hlsl_shader(SDL_Renderer* renderer, IDirect3DPixelS
 
 
 void fill_with_little_squares(SDL_Texture *texture) {
-  // TODO
+  uint8_t *pixels;
+  int pitch;
+
+  SDL_LockTexture(texture, null_ptr, &pixels, &pitch);
+
+  auto end = pixels+pitch*window_height;
+
+  while (pixels < end) {
+    *(pixels++) = rand();
+  }
+
+  SDL_UnlockTexture(texture);
 }
 
 IDirect3DPixelShader9* hlsl_shader(SDL_Renderer* renderer) {
