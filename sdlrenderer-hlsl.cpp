@@ -186,7 +186,7 @@ void fill_with_little_squares(SDL_Texture *texture) {
   uint8_t *pixels;
   int pitch;
 
-  SDL_LockTexture(texture, nullptr, &pixels, &pitch);
+  SDL_LockTexture(texture, nullptr, reinterpret_cast<void**>(&pixels), &pitch);
 
   auto end = pixels+pitch*window_height;
 
