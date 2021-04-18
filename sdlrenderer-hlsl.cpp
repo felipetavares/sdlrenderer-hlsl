@@ -186,12 +186,14 @@ void fill_with_little_squares(SDL_Texture *texture) {
   uint8_t *pixels;
   int pitch;
 
-  SDL_LockTexture(texture, null_ptr, &pixels, &pitch);
+  SDL_LockTexture(texture, nullptr, &pixels, &pitch);
 
   auto end = pixels+pitch*window_height;
 
   while (pixels < end) {
     *(pixels++) = rand();
+
+    pixels++;
   }
 
   SDL_UnlockTexture(texture);
