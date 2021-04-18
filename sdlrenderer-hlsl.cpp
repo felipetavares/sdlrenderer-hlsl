@@ -117,8 +117,8 @@ void fill_with_little_squares(SDL_Texture *texture) {
 
   SDL_LockTexture(texture, nullptr, reinterpret_cast<void**>(&pixels), &pitch);
 
-  const size = window_width*window_height;
-  for (int i=0;i<size;i++) {
+  const size_t size = window_width*window_height;
+  for (size_t i=0;i<size;i++) {
     pixels[i] = rand();
   }
 
