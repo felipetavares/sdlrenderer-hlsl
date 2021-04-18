@@ -101,16 +101,6 @@ IDirect3DPixelShader9* apply_hlsl_pixel_shader(SDL_Renderer* renderer, IDirect3D
     return current_shader;
 }
 
-IDirect3DVertexShader9* apply_hlsl_vertex_shader(SDL_Renderer* renderer, IDirect3DVertexShader9* shader) {
-    IDirect3DDevice9* device = reinterpret_cast<D3D_RenderData*>(renderer->driverdata)->device;
-    IDirect3DVertexShader9* current_shader;
-
-    assert(D3D_OK == IDirect3DDevice9_GetVertexShader(device, &current_shader));
-
-    assert(D3D_OK == IDirect3DDevice9_SetVertexShader(device, shader));
-
-    return current_shader;
-}
 
 void fill_with_little_squares(SDL_Texture *texture) {
   uint32_t *pixels;
@@ -137,14 +127,6 @@ IDirect3DPixelShader9* hlsl_pixel_shader(SDL_Renderer* renderer) {
   return shader;
 }
 
-IDirect3DVertexShader9* hlsl_vertex_shader(SDL_Renderer* renderer) {
-  IDirect3DDevice9* device = reinterpret_cast<D3D_RenderData*>(renderer->driverdata)->device;
-  IDirect3DVertexShader9 *shader;
-
-  assert(D3D_OK == IDirect3DDevice9_CreateVertexShader(device, vertex_shader_binary, &shader));
-
-  return shader;
-}
 
 int main(int arg_count, char** arg_vector) {
   SDL_Window* window = SDL_CreateWindow(window_title,
@@ -157,7 +139,6 @@ int main(int arg_count, char** arg_vector) {
                                            SDL_TEXTUREACCESS_STREAMING,
                                            window_width, window_height);
   IDirect3DPixelShader9* shader = hlsl_pixel_shader(renderer);
-  IDirect3DVertexShader9* vertex_shader = hlsl_vertex_shader(renderer);
 
   fill_with_little_squares(texture);
 
@@ -167,12 +148,10 @@ int main(int arg_count, char** arg_vector) {
 
     // Do the drawing using our HLSL shader
     const auto previous_shader = apply_hlsl_pixel_shader(renderer, shader);
-    //const auto previous_vertex_shader = apply_hlsl_vertex_shader(renderer, vertex_shader);
     {
       SDL_RenderCopy(renderer, texture, nullptr, nullptr);
       SDL_RenderFlush(renderer);
     }
-    //apply_hlsl_vertex_shader(renderer, previous_vertex_shader);
     apply_hlsl_pixel_shader(renderer, previous_shader);
 
 
