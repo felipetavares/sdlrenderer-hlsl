@@ -2,7 +2,8 @@
 #include <cstdint>
 
 // This has the full definition for SDL_Renderer, which allows us to reference
-// private fields inside it.
+// private fields inside it. Needs to be imported before SDL.h so we dont
+// redefine anything in there, which would break the build.
 #include <SDL_sysrender.h>
 
 #include <SDL.h>
@@ -129,7 +130,7 @@ void fill_with_little_squares(SDL_Texture *texture) {
 
   SDL_LockTexture(texture, nullptr, reinterpret_cast<void**>(&pixels), &pitch);
 
-  const size_t size = window_width*window_height;
+  const size_t size = window_width*window_height*4;
   for (size_t i=0;i<size;i++) {
     pixels[i] = rand();
   }
