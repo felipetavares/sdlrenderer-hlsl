@@ -1,4 +1,3 @@
-#include <SDL/SDL_video.h>
 #include <cassert>
 #include <cstdint>
 
