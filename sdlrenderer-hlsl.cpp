@@ -77,7 +77,7 @@ SDL_Renderer* direct3d9_renderer(SDL_Window* window) {
   //
   // In a real application we would select the shading language (HLSL or GLSL)
   // based on the renderer we get instead of forcing it to be direct3d9.
-  assert(!strcmp(renderer_details.name, "direct3d9"));
+  assert(!strcmp(renderer_details.name, "direct3d"));
 
   return renderer;
 }
