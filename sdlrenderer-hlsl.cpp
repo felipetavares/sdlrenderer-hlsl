@@ -117,17 +117,17 @@ void fill_with_little_squares(SDL_Texture *texture) {
 
   SDL_LockTexture(texture, nullptr, reinterpret_cast<void**>(&pixels), &pitch);
 
-  auto end = pixels+(pitch*window_height);
+  // auto end = pixels+(pitch*window_height);
 
-  while (pixels < end) {
-    *(pixels++) = rand();
-  }
+  // while (pixels < end) {
+  //   *(pixels++) = rand();
+  // }
 
   SDL_UnlockTexture(texture);
 }
 
 IDirect3DPixelShader9* hlsl_shader(SDL_Renderer* renderer) {
-  IDirect3DDevice9* device = ((D3D_RenderData*)renderer->driverdata)->device;
+  IDirect3DDevice9* device = reinterpret_cast<D3D_RenderData*>(renderer->driverdata)->device;
   IDirect3DPixelShader9 *shader;
 
   assert(D3D_OK == IDirect3DDevice9_CreatePixelShader(device, shader_binary, &shader));
