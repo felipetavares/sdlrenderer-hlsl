@@ -132,7 +132,7 @@ void fill_with_little_squares(SDL_Texture *texture) {
 
   const size_t size = window_width*window_height*4;
   for (size_t i=0;i<size;i++) {
-    pixels[i] = rand();
+    pixels[i] = ((i/window_width)+(i%window_width)/4)%2 == 0 ? 255 : 0;
   }
 
   SDL_UnlockTexture(texture);
