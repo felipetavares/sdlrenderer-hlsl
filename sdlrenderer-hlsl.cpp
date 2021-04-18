@@ -102,18 +102,13 @@ IDirect3DPixelShader9* apply_hlsl_pixel_shader(SDL_Renderer* renderer, IDirect3D
 }
 
 
-void fill_with_little_squares(SDL_Texture *texture) {
+void send_byte_using_texture(SDL_Texture *texture, uint8_t byte) {
   uint32_t *pixels;
   int pitch;
 
   SDL_LockTexture(texture, nullptr, reinterpret_cast<void**>(&pixels), &pitch);
 
-  const size_t size = window_width*window_height;
-  for (size_t i=0;i<size;i++) {
-    // Chooses white or black, changes the color if we move in either the x or y
-    // direction
-    pixels[i] = ((i/window_width)+(i%window_width))%2 == 0 ? 0xffffffff : 0x000000ff;
-  }
+  pixels[0] = byte;
 
   SDL_UnlockTexture(texture);
 }
@@ -137,14 +132,17 @@ int main(int arg_count, char** arg_vector) {
   SDL_Texture* texture = SDL_CreateTexture(renderer,
                                            SDL_PIXELFORMAT_RGBA8888,
                                            SDL_TEXTUREACCESS_STREAMING,
-                                           window_width, window_height);
+                                           1, 1);
   IDirect3DPixelShader9* shader = hlsl_pixel_shader(renderer);
 
-  fill_with_little_squares(texture);
+  uint8_t frame_counter = 0;
 
   // Main Loop
   while (true) {
     if (should_quit()) break;
+
+    // Allow the shader to do effects that change with time
+    send_byte_using_texture(texture, frame_counter++);
 
     // Do the drawing using our HLSL shader
     const auto previous_shader = apply_hlsl_pixel_shader(renderer, shader);
