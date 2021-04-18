@@ -26,4 +26,8 @@ int main(int arg_count, char** arg_vector) {
 }
 ```
 
-# Complete Source
+# How can I compile this example project?
+
+First, you are going to need the microsoft C and C++ compiler installed. 
+
+https://docs.microsoft.com/en-us/cpp/build/walkthrough-compiling-a-native-cpp-program-on-the-command-line?view=msvc-160
