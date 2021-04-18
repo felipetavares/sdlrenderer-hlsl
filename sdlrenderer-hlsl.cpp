@@ -1,3 +1,4 @@
+#include <SDL/SDL_video.h>
 #include <cassert>
 #include <cstdint>
 
@@ -219,6 +220,8 @@ int main(int arg_count, char** arg_vector) {
   IDirect3DPixelShader9* shader = hlsl_pixel_shader(renderer);
   IDirect3DVertexShader9* vertex_shader = hlsl_vertex_shader(renderer);
 
+  SDL_Rect draw_rectangle = {0, 0, window_width, window_height};
+
   fill_with_little_squares(texture);
 
   // Main Loop
@@ -229,11 +232,11 @@ int main(int arg_count, char** arg_vector) {
     const auto previous_shader = apply_hlsl_pixel_shader(renderer, shader);
     const auto previous_vertex_shader = apply_hlsl_vertex_shader(renderer, vertex_shader);
     {
-      SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+      SDL_RenderCopy(renderer, texture, &draw_rectangle, &draw_rectangle);
       SDL_RenderFlush(renderer);
     }
-    apply_hlsl_pixel_shader(renderer, previous_shader);
     apply_hlsl_vertex_shader(renderer, previous_vertex_shader);
+    apply_hlsl_pixel_shader(renderer, previous_shader);
 
 
     // ... show the drawing
