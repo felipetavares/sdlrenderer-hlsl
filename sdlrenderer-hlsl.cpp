@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <d3d9.h>
 
 // These are from SDL_render_d3d.c (inside SDL)
