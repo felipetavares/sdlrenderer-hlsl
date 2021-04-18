@@ -1,3 +1,4 @@
+#include <SDL2/SDL_render.h>
 #include <cassert>
 #include <cstdint>
 
@@ -142,7 +143,7 @@ int main(int arg_count, char** arg_vector) {
   SDL_Renderer* renderer = direct3d9_renderer(window);
   SDL_Texture* texture = SDL_CreateTexture(renderer,
                                            SDL_PIXELFORMAT_RGBA8888,
-                                           SDL_TEXTUREACCESS_STATIC,
+                                           SDL_TEXTUREACCESS_STREAMING,
                                            window_width, window_height);
   IDirect3DPixelShader9* shader = hlsl_shader(renderer);
 
