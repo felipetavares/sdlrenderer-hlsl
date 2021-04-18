@@ -87,7 +87,7 @@ void fill_with_little_squares(SDL_Texture *texture) {
 }
 
 IDirect3DPixelShader9* direct3d9_shader(SDL_Renderer* renderer) {
-
+  return nullptr;
 }
 
 int main(int arg_count, char** arg_vector) {
