@@ -1,4 +1,3 @@
-#include <SDL2/SDL_render.h>
 #include <cassert>
 
 #include <SDL2/SDL.h>
