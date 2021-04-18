@@ -1,11 +1,12 @@
 #include <cassert>
 
+// This has the full definition for SDL_Renderer, which allows us to reference
+// private fields inside it.
+#include <SDL_sysrender.h>
+
 #include <SDL.h>
 #include <d3d9.h>
 
-// This has the full definition for SDL_Renderer, which allows us to reference
-// private fields inside it.
-#include <SDL_render.h>
 
 // These are from SDL_render_d3d.c (inside SDL)
 // We need to copy them here because they are not included by the header files.
