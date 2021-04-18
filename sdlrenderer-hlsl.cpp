@@ -125,14 +125,14 @@ IDirect3DPixelShader9* apply_hlsl_shader(SDL_Renderer* renderer, IDirect3DPixelS
 
 
 void fill_with_little_squares(SDL_Texture *texture) {
-  uint8_t *pixels;
+  uint32_t *pixels;
   int pitch;
 
   SDL_LockTexture(texture, nullptr, reinterpret_cast<void**>(&pixels), &pitch);
 
-  const size_t size = window_width*window_height*4;
+  const size_t size = window_width*window_height;
   for (size_t i=0;i<size;i++) {
-    pixels[i] = ((i/window_width)+(i%window_width)/4)%2 == 0 ? 255 : 0;
+    pixels[i] = ((i/window_width)+(i%window_width))%2 == 0 ? 0xffffffff : 0x000000ff;
   }
 
   SDL_UnlockTexture(texture);
