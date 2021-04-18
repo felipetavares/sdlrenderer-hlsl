@@ -106,6 +106,17 @@ static const DWORD shader_binary[] = {
   // 0x80e40000, 0x80e40001, 0x0000ffff
 };
 
+static const DWORD vertex_shader_binary[] = {
+  0xfffe0300, 0x0016fffe, 0x42415443, 0x0000001c, 0x00000023, 0xfffe0300,
+  0x00000000, 0x00000000, 0x20000100, 0x0000001c, 0x335f7376, 0x4d00305f,
+  0x6f726369, 0x74666f73, 0x29522820, 0x534c4820, 0x6853204c, 0x72656461,
+  0x6d6f4320, 0x656c6970, 0x2e392072, 0x392e3232, 0x322e3934, 0x00383432,
+  0x0200001f, 0x80000000, 0x900f0000, 0x0200001f, 0x80000005, 0x900f0001,
+  0x0200001f, 0x80000000, 0xe00f0000, 0x0200001f, 0x80000005, 0xe00f0001,
+  0x02000001, 0xe00f0000, 0x90e40000, 0x02000001, 0xe00f0001, 0x90e40001,
+  0x0000ffff
+};
+
 const static char window_title[] = "SDL_Renderer + HLSL";
 const static int window_width = 640;
 const static int window_height = 480;
@@ -147,7 +158,7 @@ SDL_Renderer* direct3d9_renderer(SDL_Window* window) {
   return renderer;
 }
 
-IDirect3DPixelShader9* apply_hlsl_shader(SDL_Renderer* renderer, IDirect3DPixelShader9* shader) {
+IDirect3DPixelShader9* apply_hlsl_pixel_shader(SDL_Renderer* renderer, IDirect3DPixelShader9* shader) {
     IDirect3DDevice9* device = reinterpret_cast<D3D_RenderData*>(renderer->driverdata)->device;
     IDirect3DPixelShader9* current_shader;
 
@@ -158,6 +169,16 @@ IDirect3DPixelShader9* apply_hlsl_shader(SDL_Renderer* renderer, IDirect3DPixelS
     return current_shader;
 }
 
+IDirect3DVertexShader9* apply_hlsl_vertex_shader(SDL_Renderer* renderer, IDirect3DVertexShader9* shader) {
+    IDirect3DDevice9* device = reinterpret_cast<D3D_RenderData*>(renderer->driverdata)->device;
+    IDirect3DVertexShader9* current_shader;
+
+    assert(D3D_OK == IDirect3DDevice9_GetVertexShader(device, &current_shader));
+
+    assert(D3D_OK == IDirect3DDevice9_SetVertexShader(device, shader));
+
+    return current_shader;
+}
 
 void fill_with_little_squares(SDL_Texture *texture) {
   uint32_t *pixels;
@@ -175,11 +196,20 @@ void fill_with_little_squares(SDL_Texture *texture) {
   SDL_UnlockTexture(texture);
 }
 
-IDirect3DPixelShader9* hlsl_shader(SDL_Renderer* renderer) {
+IDirect3DPixelShader9* hlsl_pixel_shader(SDL_Renderer* renderer) {
   IDirect3DDevice9* device = reinterpret_cast<D3D_RenderData*>(renderer->driverdata)->device;
   IDirect3DPixelShader9 *shader;
 
   assert(D3D_OK == IDirect3DDevice9_CreatePixelShader(device, shader_binary, &shader));
+
+  return shader;
+}
+
+IDirect3DVertexShader9* hlsl_vertex_shader(SDL_Renderer* renderer) {
+  IDirect3DDevice9* device = reinterpret_cast<D3D_RenderData*>(renderer->driverdata)->device;
+  IDirect3DVertexShader9 *shader;
+
+  assert(D3D_OK == IDirect3DDevice9_CreateVertexShader(device, vertex_shader_binary, &shader));
 
   return shader;
 }
@@ -194,7 +224,8 @@ int main(int arg_count, char** arg_vector) {
                                            SDL_PIXELFORMAT_RGBA8888,
                                            SDL_TEXTUREACCESS_STREAMING,
                                            window_width, window_height);
-  IDirect3DPixelShader9* shader = hlsl_shader(renderer);
+  IDirect3DPixelShader9* shader = hlsl_pixel_shader(renderer);
+  IDirect3DVertexShader9* vertex_shader = hlsl_vertex_shader(renderer);
 
   fill_with_little_squares(texture);
 
@@ -203,14 +234,21 @@ int main(int arg_count, char** arg_vector) {
     if (should_quit()) break;
 
     // Do the drawing using our HLSL shader
-    const auto previous_shader = apply_hlsl_shader(renderer, shader); {
+    const auto previous_shader = apply_hlsl_pixel_shader(renderer, shader);
+    const auto previous_vertex_shader = apply_hlsl_vertex_shader(renderer, vertex_shader);
+    {
       SDL_RenderCopy(renderer, texture, nullptr, nullptr);
       SDL_RenderFlush(renderer);
-    } apply_hlsl_shader(renderer, previous_shader);
+    }
+    apply_hlsl_pixel_shader(renderer, previous_shader);
+    apply_hlsl_vertex_shader(renderer, previous_vertex_shader);
+
 
     // ... show the drawing
     SDL_RenderPresent(renderer);
   }
+
+  // FIXME: delete shaders
 
   SDL_DestroyTexture(texture);
   SDL_DestroyRenderer(renderer);
