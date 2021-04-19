@@ -1,6 +1,6 @@
 # SDL_Renderer + HLSL
 
-![Image of a colored Mandelbrot fractal rendered with HLSL and SDL. Orange colors.]()
+![Image of a colored Mandelbrot fractal rendered with HLSL and SDL. Orange colors.](https://raw.githubusercontent.com/felipetavares/sdlrenderer-hlsl/master/screenshots/a.jpg "Mandelbrot Fractal")
 
 Sometimes when working with SDL you may want to have custom effects that run
 fullscreen for every pixel. In some cases you can just do that on the CPU side
@@ -22,7 +22,7 @@ you may want that are:
   
 # Core Idea 
 
-![Image of a colored Mandelbrot fractal rendered with HLSL and SDL. Blue colors.]()
+![Image of a colored Mandelbrot fractal rendered with HLSL and SDL. Blue colors.](https://raw.githubusercontent.com/felipetavares/sdlrenderer-hlsl/master/screenshots/b.jpg "Mandelbrot Fractal")
 
 The main idea is to define the same D3D_RenderData that is used by SDL's
 Direct3d9 driver. This way we can then access everything that's inside it. In
