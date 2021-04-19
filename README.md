@@ -73,11 +73,12 @@ probably better to drop SDL and just go with full Windows + DirectX.
 
 # How can I compile this example project?
 
-First, you are going to need the microsoft C and C++ compiler installed. Also
+First, you are going to need the Microsoft C and C++ compiler installed. Also
 install CMake, the option is available directly from the download tool from
 microsoft or Visual Studio if you prefer to have Visual Studio installed.
+Instructions for all that are available at [Microsoft's website][installing-cl].
 
-https://docs.microsoft.com/en-us/cpp/build/walkthrough-compiling-a-native-cpp-program-on-the-command-line?view=msvc-160
+[installing-cl]: https://docs.microsoft.com/en-us/cpp/build/walkthrough-compiling-a-native-cpp-program-on-the-command-line?view=msvc-160
 
 Then you can open the "Developer Command Prompt for VS 2019", go to the
 directory where you downloaded the source code and:
